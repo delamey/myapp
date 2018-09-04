@@ -192,17 +192,6 @@ public class MainActivity extends AppCompatActivity {
         deleteAll():删除所有
          */
         young.setName("delamey");
-        //daoSession.getYoungDao().update(young);
-//        try {
-//            URL url=new URL(constant.map);
-//            Log.e("url",url.toString());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-
-//        User user=new User (constant.map,"item4",1);
-//            userList.add(user);
-//            padapter.notifyDataSetChanged();
 
 
     }
