@@ -3,13 +3,18 @@ package com.example.delamey.myapplication5;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.delamey.myapplication5.adapter.padapter;
@@ -17,6 +22,7 @@ import com.example.delamey.myapplication5.application.myapplication;
 import com.example.delamey.myapplication5.bean.MessageEvent;
 import com.example.delamey.myapplication5.bean.Result;
 import com.example.delamey.myapplication5.bean.User;
+import com.example.delamey.myapplication5.bean.refresh;
 import com.example.delamey.myapplication5.bean.young;
 import com.example.delamey.myapplication5.constant.api;
 import com.example.delamey.myapplication5.constant.constant;
@@ -38,6 +44,10 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bingoogolapple.refreshlayout.BGAMeiTuanRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGAMoocStyleRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -50,7 +60,7 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  BGARefreshLayout.BGARefreshLayoutDelegate {
     public static final String myjson = "{\"name\":\"mrxi\",\"age\":\"24\",\"gender\":1,\"school\":\"bupt\"}";
     public static final String fanxing = " {\n" +
             "            \"retCode\": \"0000\"，\n" +
@@ -67,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
     Button event;
     @BindView(R.id.permissions)
     Button permissions;
+
+    @BindView(R.id.refreshText)
+    TextView refreshText;
+    @BindView(R.id.refresh)
+    BGARefreshLayout refresh;
     private DaoSession daoSession;
     public static final int cache = 1024 * 1024 * 10;
     @BindView(R.id.userrecycview)
@@ -92,17 +107,13 @@ public class MainActivity extends AppCompatActivity {
         userrecycview.setAdapter(padapter);
         initadata();
         selectdata();
+        BGANormalRefreshViewHolder bgaNormalRefreshViewHolder = new BGANormalRefreshViewHolder(this, true);
+        refresh.setRefreshViewHolder(bgaNormalRefreshViewHolder);
+        refresh.setDelegate(this);
 
-
-        //        togson(myjson);
-//        firstGson firstGson2=new firstGson("delamey");
-//        Gson gson=new Gson();
-//        String str=gson.toJson(firstGson2,firstGson.class);
-//        mytext.append(str);
-//        Type userType=new TypeToken<Result<User>>(){}.getType();
-//        Result<List<User>> userResult=gson.fromJson(fanxing,userType);
-//        List<User> userList=userResult.getUser();
     }
+
+
 
     private void requestpr() {
         rxPermissions.request(Manifest.permission.CAMERA,
@@ -144,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initadata() {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(constant.myurl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -168,7 +180,10 @@ public class MainActivity extends AppCompatActivity {
                             Result<User> userResult = results.get(i);
                             userList.add(userResult.getUser());
                             padapter.notifyDataSetChanged();
+
                         }
+                        refresh.endRefreshing();
+                        EventBus.getDefault().post(new refresh(results.size()));
 
                     }
 
@@ -218,12 +233,24 @@ public class MainActivity extends AppCompatActivity {
                 //startActivity(new Intent(this,WebviewActivity.class));
                 break;
             case R.id.event:
-                EventBus.getDefault().post(new MessageEvent("event mesage"));
+
                 break;
 
 
         }
 
+    }
+
+
+
+    @Override
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
+        initadata();
+    }
+
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        return false;
     }
 
 
@@ -279,6 +306,26 @@ public class MainActivity extends AppCompatActivity {
     public void receive2(User user) {
         userList.add(user);
         padapter.notifyDataSetChanged();
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void receive3(refresh refresh) {
+
+
+        refreshText.setText("更新了" + refresh.getNumber() + "条数据");
+        refreshText.setVisibility(View.VISIBLE);
+        ScaleAnimation scaleAnimation = (ScaleAnimation) AnimationUtils.loadAnimation(this, R.anim.textview);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshText.startAnimation(scaleAnimation);
+                refreshText.setVisibility(View.GONE);
+            }
+        }, 1500);
+
+
     }
 
 

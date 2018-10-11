@@ -16,6 +16,8 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,6 +41,13 @@ public class myapplication extends Application {
                                     .addInterceptor(new StethoInterceptor())
                                     .build();
         Logger.addLogAdapter(new AndroidLogAdapter());
+//        UMConfigure.init(this,"5bab38faf1f556f9d8000023"
+//                ,"umeng", UMConfigure.DEVICE_TYPE_PHONE,"");
+//
+//        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
+//        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad","http://sns.whalecloud.com");
+//        PlatformConfig.setQQZone("1107797821", "pOdBEp0qIYy1Znfz");
+
 
     }
     public  void  initgreendao(){
