@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.delamey.myapplication5.adapter.padapter;
 import com.example.delamey.myapplication5.application.myapplication;
+import com.example.delamey.myapplication5.bean.MakeMode;
 import com.example.delamey.myapplication5.bean.MessageEvent;
 import com.example.delamey.myapplication5.bean.Result;
 import com.example.delamey.myapplication5.bean.User;
@@ -110,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements  BGARefreshLayout
         BGANormalRefreshViewHolder bgaNormalRefreshViewHolder = new BGANormalRefreshViewHolder(this, true);
         refresh.setRefreshViewHolder(bgaNormalRefreshViewHolder);
         refresh.setDelegate(this);
+        MakeMode.builder builder=new MakeMode.builder();
+        MakeMode makeMode=builder.setAge(11).setName("delamey").build();
+
 
     }
 
