@@ -167,7 +167,8 @@ public class MainActivity extends AppCompatActivity implements  BGARefreshLayout
                 .client(okhttp())
                 .build();
         api api = retrofit.create(api.class);
-        api.getjson("user.json").observeOn(AndroidSchedulers.mainThread())
+        api.getjson("user.json")
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 
                 .subscribe(new Observer<List<Result<User>>>() {
