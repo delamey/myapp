@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
@@ -113,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements  BGARefreshLayout
         refresh.setDelegate(this);
         MakeMode.builder builder=new MakeMode.builder();
         MakeMode makeMode=builder.setAge(11).setName("delamey").build();
-
 
     }
 
