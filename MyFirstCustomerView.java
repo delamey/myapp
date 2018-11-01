@@ -10,6 +10,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
+
+import com.example.delamey.myapplication5.application.myapplication;
 
 public class MyFirstCustomerView extends View implements View.OnClickListener {
     private Context mContext;
